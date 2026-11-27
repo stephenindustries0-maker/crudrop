@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wallet - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .wallet-balance-card { background: linear-gradient(135deg, var(--accent) 0%, #D84315 100%); border-radius: 24px; padding: 30px 24px; color: white; box-shadow: 0 12px 30px rgba(255,87,34,0.3); position: relative; overflow: hidden; }
+  .wallet-balance-card::after { content: ''; position: absolute; right: -20px; top: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+  .wallet-balance-card h1 { font-size: 42px; font-weight: 900; margin: 8px 0 20px; letter-spacing: -1px; }
+  .wallet-actions { display: flex; gap: 12px; margin-top: 20px; }
+  .wallet-actions a { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.2s; text-align: center; text-decoration: none; display: block; }
+  .btn-topup { background: white; color: var(--accent); }
+  .btn-topup:hover { background: #f1f5f9; transform: translateY(-2px); }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+</style>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-brand"><h1>Cru<span>Drop</span></h1><button class="close-btn mobile-only" onclick="toggleSidebar()">✕</button></div>
+  <div class="sidebar-profile"><div class="avatar" id="navAvatar">S</div><div><h3 id="navName">Student</h3><p id="navHostel">Crawford</p></div></div>
+  <div class="sidebar-menu">
+    <a href="/"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Food Menu</a>
+    <a href="/laundry.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Laundry (Sat)</a>
+    <a href="/leaderboard.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Leaderboard</a>
+    <a href="/wallet.html" class="active"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Wallet</a>
+    <a href="/notifications.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications</a>
+    <a href="/support.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Support</a>
+    <a href="/profile.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a>
+  </div>
+  <div class="sidebar-footer"><p>A Stephen Industries Platform</p></div>
+</aside>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <button class="menu-toggle mobile-only" onclick="toggleSidebar()">☰</button>
+        <h2 style="margin:0; font-size:18px;">My Wallet</h2>
+      </div>
+    </div>
+  </header>
+  
+  <main style="max-width: 600px; margin: 0 auto;">
+    <div class="wallet-balance-card">
+      <p style="margin:0; font-size:14px; font-weight:600; opacity:0.9; text-transform:uppercase; letter-spacing:1px;">Available Balance</p>
+      <h1 id="realBalance">₦0.00</h1>
+      <p style="margin:0; font-size:12px; opacity:0.8;">Available to spend</p>
+      <div class="wallet-actions">
+        <a href="/topup.html" class="btn-topup">+ Top Up</a>
+      </div>
+    </div>
+
+    <h3 style="margin:32px 0 16px; font-size:18px; font-weight:800;">Recent Transactions</h3>
+    
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" style="margin-bottom:12px; opacity:0.5;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      <p style="margin:0; font-size:14px;">You have no recent transactions.</p>
+    </div>
+  </main>
+</div>
+<script src="/js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedUser = localStorage.getItem('cruDropUser');
+    if(savedUser) {
+      const user = JSON.parse(savedUser);
+      if(document.getElementById('navName')) document.getElementById('navName').textContent = user.name;
+      if(document.getElementById('navHostel')) document.getElementById('navHostel').textContent = user.hostel;
+      if(document.getElementById('navAvatar')) document.getElementById('navAvatar').textContent = user.name.charAt(0).toUpperCase();
+    }
+  });
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/sw.js')
+        .then(registration => console.log('SW registered'))
+        .catch(err => console.log('SW registration failed'));
+    });
+  }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem('cruDropUser') || '{}');
+    if(user.wallet_balance && document.getElementById('realBalance')) {
+      document.getElementById('realBalance').textContent = "₦" + user.wallet_balance.toLocaleString();
+    }
+  });
+</script>
+</body>
+</html>

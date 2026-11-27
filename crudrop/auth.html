@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login or Sign Up - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  /* Override global body flex to allow perfect centering */
+  body { display: block !important; background: var(--bg-main); margin: 0; }
+
+  .auth-wrapper { display: flex; min-height: 100vh; width: 100vw; overflow: hidden; }
+
+  /* Left Side Gradient (Desktop Only) */
+  .auth-side { flex: 1; background: linear-gradient(135deg, var(--accent) 0%, #D84315 100%); display: none; flex-direction: column; justify-content: center; padding: 60px; color: white; position: relative; }
+  @media (min-width: 900px) { .auth-side { display: flex; } }
+
+  .auth-side::after { content: ''; position: absolute; bottom: -50px; left: -50px; width: 300px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+  .auth-side h1 { font-size: 48px; font-weight: 900; margin: 0 0 16px; line-height: 1.1; z-index: 2; }
+  .auth-side p { font-size: 18px; opacity: 0.9; z-index: 2; max-width: 400px; line-height: 1.6; }
+
+  /* Right Side Form (Mobile & Desktop) */
+  .auth-form-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; width: 100%; overflow-y: auto; }
+  .auth-form-box { width: 100%; max-width: 420px; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .auth-logo { font-size: 36px; font-weight: 900; color: var(--text-main); letter-spacing: -1px; margin-bottom: 40px; text-align: center; }
+  .auth-logo span { color: var(--accent); }
+
+  .auth-tabs { display: flex; background: var(--bg-card); border-radius: 12px; padding: 4px; margin-bottom: 30px; border: 1px solid var(--border); }
+  .auth-tab { flex: 1; padding: 14px; text-align: center; font-weight: 700; font-size: 15px; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: 0.3s; }
+  .auth-tab.active { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(255,87,34,0.3); }
+
+  .form-section { display: none; animation: fadeIn 0.3s ease; }
+  .form-section.active { display: block; }
+
+  .auth-input-group { margin-bottom: 20px; position: relative; }
+  .auth-input-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+  .auth-input-group input { 
+    width: 100%; padding: 16px; padding-right: 48px; /* Extra padding for the eye icon */
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; 
+    font-family: inherit; font-size: 15px; color: var(--text-main); outline: none; transition: all 0.2s; 
+  }
+  .auth-input-group input::placeholder { color: #475569; }
+  .auth-input-group input:focus { border-color: var(--accent); background: var(--bg-card-hover); box-shadow: 0 0 0 3px rgba(255,87,34,0.1); }
+
+  /* Eye Icon */
+  .toggle-password { 
+    position: absolute; right: 16px; bottom: 16px; 
+    cursor: pointer; color: var(--text-muted); 
+    display: flex; align-items: center; justify-content: center;
+  }
+  .toggle-password:hover { color: var(--text-main); }
+
+  .auth-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; background: var(--accent); color: white; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(255,87,34,0.3); transition: 0.2s; }
+  .auth-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+  .row-inputs { display: flex; gap: 12px; }
+  .row-inputs > div { flex: 1; }
+
+  /* Forgot Password */
+  .forgot-link { display: block; text-align: right; color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; margin-top: -10px; margin-bottom: 20px; }
+  .forgot-link:hover { text-decoration: underline; }
+</style>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div class="auth-wrapper">
+  <div class="auth-side">
+    <h1>Skip the queue.<br>Straight to your hostel.</h1>
+    <p>Order food from Crawford's best vendors and get your laundry washed, all before curfew.</p>
+  </div>
+
+  <div class="auth-form-container">
+    <div class="auth-form-box">
+      <div class="auth-logo">Cru<span>Drop</span></div>
+      
+      <div class="auth-tabs">
+        <div class="auth-tab active" onclick="switchTab('login')">Log In</div>
+        <div class="auth-tab" onclick="switchTab('signup')">Sign Up</div>
+      </div>
+
+      <form id="loginForm" class="form-section active" onsubmit="handleLogin(event)">
+        <div class="auth-input-group">
+          <label>Phone Number</label>
+          <input type="tel" id="loginPhone" placeholder="e.g. 08123456789" required>
+        </div>
+        <div class="auth-input-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required>
+          <div class="toggle-password" onclick="togglePassword('loginPassword', this)">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+        </div>
+        
+        <a href="https://wa.me/2347084316433?text=Hello%20Stephen,%20I%20forgot%20my%20CruDrop%20password." target="_blank" class="forgot-link">Forgot Password?</a>
+        
+        <button type="submit" class="auth-btn">Log In</button>
+      </form>
+
+      <form id="signupForm" class="form-section" onsubmit="handleSignup(event)">
+        <div class="auth-input-group">
+          <label>Full Name</label>
+          <input type="text" id="signupName" placeholder="e.g. Stephen Idowu" required>
+        </div>
+        <div class="auth-input-group">
+          <label>Phone Number</label>
+          <input type="tel" id="signupPhone" placeholder="e.g. 08123456789" required>
+        </div>
+        <div class="auth-input-group">
+          <label>Email Address</label>
+          <input type="email" id="signupEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="row-inputs">
+          <div class="auth-input-group">
+            <label>Hostel</label>
+            <input type="text" id="signupHostel" placeholder="e.g. Peter Hall" required>
+          </div>
+          <div class="auth-input-group">
+            <label>Room No.</label>
+            <input type="text" id="signupRoom" placeholder="e.g. 12B" required>
+          </div>
+        </div>
+        <div class="auth-input-group">
+          <label>Password</label>
+          <input type="password" id="signupPassword" placeholder="Create a strong password" required minlength="6">
+          <div class="toggle-password" onclick="togglePassword('signupPassword', this)">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+        </div>
+        <button type="submit" class="auth-btn">Create Account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+    if(tab === 'login') {
+      document.querySelectorAll('.auth-tab')[0].classList.add('active');
+      document.getElementById('loginForm').classList.add('active');
+    } else {
+      document.querySelectorAll('.auth-tab')[1].classList.add('active');
+      document.getElementById('signupForm').classList.add('active');
+    }
+  }
+
+  function togglePassword(inputId, iconElement) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+      input.type = "text";
+      iconElement.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    } else {
+      input.type = "password";
+      iconElement.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    const origText = btn.textContent;
+    btn.textContent = "Logging in...";
+    
+    const phone = document.getElementById('loginPhone').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password })
+      });
+      const data = await res.json();
+      
+      if(data.success) {
+        localStorage.setItem('cruDropUser', JSON.stringify(data.user));
+        window.location.href = '/';
+      } else {
+        alert(data.error);
+        btn.textContent = origText;
+      }
+    } catch (err) {
+      alert("Network error. Are you running 'npx vercel dev'?");
+      btn.textContent = origText;
+    }
+  }
+
+  async function handleSignup(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    const origText = btn.textContent;
+    btn.textContent = "Creating Account...";
+
+    const user = {
+      name: document.getElementById('signupName').value,
+      phone: document.getElementById('signupPhone').value,
+      email: document.getElementById('signupEmail').value,
+      hostel: document.getElementById('signupHostel').value,
+      room: document.getElementById('signupRoom').value,
+      password: document.getElementById('signupPassword').value
+    };
+    
+    try {
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      });
+      const data = await res.json();
+      
+      if(data.success) {
+        localStorage.setItem('cruDropUser', JSON.stringify(data.user));
+        window.location.href = '/';
+      } else {
+        alert(data.error);
+        btn.textContent = origText;
+      }
+    } catch (err) {
+      alert("Network error. Are you running 'npx vercel dev'?");
+      btn.textContent = origText;
+    }
+  }
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/sw.js')
+        .then(registration => console.log('SW registered'))
+        .catch(err => console.log('SW registration failed'));
+    });
+  }
+</script>
+</body>
+</html>

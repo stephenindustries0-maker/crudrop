@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CruDrop by Stephen Industries</title><link rel="stylesheet" href="/css/style.css"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-brand"><h1>Cru<span>Drop</span></h1><button class="close-btn mobile-only" onclick="toggleSidebar()">✕</button></div>
+  <div class="sidebar-profile"><div class="avatar">S</div><div><h3>Stephen</h3><p>Crawford University</p></div></div>
+  <div class="sidebar-menu">
+    <a href="/" class="active"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Food Menu</a>
+    <a href="/laundry.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Laundry (Sat)</a>
+    <a href="/leaderboard.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Leaderboard</a>
+    <a href="/wallet.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Wallet</a>
+    <a href="/notifications.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications</a>
+    <a href="/support.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Support</a>
+    <a href="/profile.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a>
+  </div>
+</aside>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <button class="menu-toggle mobile-only" onclick="toggleSidebar()">☰</button>
+        <div class="location desktop-only" style="margin-left: 0;"><span>Deliver to</span><strong>Crawford Hostels</strong></div>
+        <div class="location mobile-only"><span>Deliver to</span><strong>Crawford Hostels ▼</strong></div>
+      </div>
+      <div class="header-right"><div class="icon-btn" onclick="toggleCart()"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span id="cartCount" class="badge">0</span></div></div>
+    </div>
+  </header>
+  <main>
+    <div class="promo-banner">
+      <div class="promo-content"><div><h2>Curfew Rush Cutoff: 8:45 PM</h2><p>₦200 Small Plate (1–3 portions) • ₦300 Big Plate (4+ portions)</p></div></div>
+      <div class="offer-timer"><span>Ends in:</span><div id="promoTimer" class="timer-digits">00:00:00</div></div>
+    </div>
+    
+    <div class="categories">
+      <button class="cat-pill active" onclick="filterMenu('all', this)">All</button>
+      <button class="cat-pill" onclick="filterMenu('rice', this)">Rice</button>
+      <button class="cat-pill" onclick="filterMenu('swallow', this)">Swallow</button>
+      <button class="cat-pill" onclick="filterMenu('protein', this)">Proteins</button>
+      <button class="cat-pill" onclick="filterMenu('drink', this)">Drinks</button>
+    </div>
+
+    <h2 class="section-title">Full Menu</h2>
+    <section id="menu">
+      <!-- RICE -->
+      <div class="product-card" data-cat="rice" onclick="addItem('White Rice',300)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="product-info"><h3>White Rice</h3><p class="price">₦300</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="rice" onclick="addItem('Fried Rice',300)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="product-info"><h3>Fried Rice</h3><p class="price">₦300</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="rice" onclick="addItem('Jollof Rice',300)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="product-info"><h3>Jollof Rice</h3><p class="price">₦300</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="rice" onclick="addItem('Beans',300)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="product-info"><h3>Beans</h3><p class="price">₦300</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      
+      <!-- SWALLOW -->
+      <div class="product-card" data-cat="swallow" onclick="addItem('Amala',200)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 2C8.13 2 5 6.13 5 11c0 5.25 4.03 9 7 9s7-3.75 7-9c0-4.87-3.13-9-7-9z"/></svg></div><div class="product-info"><h3>Amala</h3><p class="price">₦200</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="swallow" onclick="addItem('Semo',200)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 2C8.13 2 5 6.13 5 11c0 5.25 4.03 9 7 9s7-3.75 7-9c0-4.87-3.13-9-7-9z"/></svg></div><div class="product-info"><h3>Semo</h3><p class="price">₦200</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="swallow" onclick="addItem('Eba',200)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 2C8.13 2 5 6.13 5 11c0 5.25 4.03 9 7 9s7-3.75 7-9c0-4.87-3.13-9-7-9z"/></svg></div><div class="product-info"><h3>Eba</h3><p class="price">₦200</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+
+      <!-- PROTEINS -->
+      <div class="product-card" data-cat="protein" onclick="addItem('Egg',300)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 2C8.13 2 5 6.13 5 11c0 5.25 4.03 9 7 9s7-3.75 7-9c0-4.87-3.13-9-7-9z"/></svg></div><div class="product-info"><h3>Egg</h3><p class="price">₦300</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="protein" onclick="addItem('Small Fish',300)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></div><div class="product-info"><h3>Small Fish</h3><p class="price">₦300</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="protein" onclick="addItem('Sausage',400)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><rect x="4" y="8" width="16" height="8" rx="4"/></svg></div><div class="product-info"><h3>Sausage</h3><p class="price">₦400</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="protein" onclick="addItem('Big Fish',500)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></div><div class="product-info"><h3>Big Fish</h3><p class="price">₦500</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+
+      <!-- DRINKS -->
+      <div class="product-card" data-cat="drink" onclick="addItem('Pure Water',50)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M8 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6l4-4z"/><line x1="4" y1="9" x2="20" y2="9"/></svg></div><div class="product-info"><h3>Pure Water</h3><p class="price">₦50</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="drink" onclick="addItem('Bottled Water',200)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M8 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6l4-4z"/><line x1="4" y1="9" x2="20" y2="9"/></svg></div><div class="product-info"><h3>Bottled Water</h3><p class="price">₦200</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="drink" onclick="addItem('Bag of Pure Water',600)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M8 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6l4-4z"/><line x1="4" y1="9" x2="20" y2="9"/></svg></div><div class="product-info"><h3>Bag of Water</h3><p class="price">₦600</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+      <div class="product-card" data-cat="drink" onclick="addItem('Viju Fruit Milk',700)"><div class="product-img"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M8 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6l4-4z"/><line x1="4" y1="9" x2="20" y2="9"/></svg></div><div class="product-info"><h3>Viju Milk</h3><p class="price">₦700</p></div><button class="add-btn"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+    </section>
+  </main>
+
+  <!-- NEW FLOATING CART CIRCLE -->
+  <div class="sticky-cart" id="stickyCart">
+    <!-- The Circle Button -->
+    <div class="cart-fab" onclick="toggleCart()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cartTotalText">₦0</span>
+    </div>
+
+    <!-- The Cart Drawer -->
+    <div class="cart-drawer" id="cartDrawer">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="margin:0; font-size:18px; font-weight:800;">Your Cart</h3>
+        <button onclick="toggleCart()" style="background:none; border:none; font-size:24px; color:var(--text-muted); cursor:pointer;">✕</button>
+      </div>
+      <div id="cartItems"></div>
+      <div class="cart-totals"><div id="plateTypeBadge" style="display:none; background:rgba(255,87,34,0.1); color:var(--accent); padding:8px; border-radius:8px; font-size:13px; font-weight:700; text-align:center; margin-bottom:12px;"></div><div class="row"><span>Food</span><span id="subtotal">₦0</span></div><div class="row"><span>Delivery</span><span id="delivery">₦0</span></div><div class="row"><span>Transfer Fee</span><span id="transfer">₦30</span></div><div class="row total"><span>Total</span><span id="total">₦0</span></div></div>
+      <button id="checkoutBtn" class="main-checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+</div>
+<script src="/js/app.js"></script>
+<script>
+  function filterMenu(category, btn) {
+    document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.product-card').forEach(card => {
+      if(category === 'all' || card.dataset.cat === category) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+<script>
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Update UI to show the install button
+    const installBtn = document.getElementById('installBtn');
+    if(installBtn) installBtn.style.display = 'flex';
+  });
+
+  function installApp() {
+    if (deferredPrompt) {
+      // Show the install prompt
+      deferredPrompt.prompt();
+      // Wait for the user to respond to the prompt
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the A2HS prompt');
+        } else {
+          console.log('User dismissed the A2HS prompt');
+        }
+        deferredPrompt = null;
+        document.getElementById('installBtn').style.display = 'none';
+      });
+    } else {
+      alert("To install the app, tap the 'Share' icon and select 'Add to Home Screen'.");
+    }
+  }
+</script>
+<script>
+  // Countdown to 8:45 PM daily curfew
+  setInterval(() => {
+    const now = new Date();
+    const cutoff = new Date();
+    cutoff.setHours(20, 45, 0, 0); // 8:45 PM
+
+    if (now > cutoff) {
+      cutoff.setDate(cutoff.getDate() + 1); // Move to tomorrow if past 8:45 PM
+    }
+
+    const diff = cutoff - now;
+    const hours = Math.floor(diff / 3.6e6);
+    const mins = Math.floor((diff % 3.6e6) / 6e4);
+    const secs = Math.floor((diff % 6e4) / 1000);
+
+    const timerEl = document.getElementById('promoTimer');
+    if(timerEl) timerEl.textContent = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }, 1000);
+</script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#FF5722">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/sw.js')
+        .then(reg => console.log('SW Registered'))
+        .catch(err => console.log('SW Error', err));
+    });
+  }
+</script>
+</body>
+</html>

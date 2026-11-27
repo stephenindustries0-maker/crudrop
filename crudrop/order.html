@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Tracker - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  body { display: block !important; background: var(--bg-main); margin: 0; }
+  .tracker-container { max-width: 500px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+  .tracker-header { text-align: center; padding: 40px 20px; background: var(--bg-card); border-bottom: 1px solid var(--border); border-radius: 0 0 24px 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+  .tracker-code { font-size: 56px; font-weight: 900; color: var(--accent); letter-spacing: 6px; margin: 10px 0; text-shadow: 0 4px 10px rgba(255,87,34,0.3); }
+  
+  .status-timeline { margin: 0 auto; padding: 0 20px; width: 100%; }
+  .timeline-step { display: flex; gap: 16px; margin-bottom: 28px; position: relative; opacity: 0.4; transition: 0.3s; }
+  .timeline-step.active { opacity: 1; }
+  
+  .step-icon { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; background: var(--bg-card); z-index: 2; flex-shrink: 0; color: var(--text-muted); }
+  .timeline-step.active .step-icon { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 10px rgba(255,87,34,0.3); }
+  
+  .step-content h4 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+  .step-content p { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+  
+  .timeline-step::before { content: ''; position: absolute; left: 21px; top: 44px; bottom: -28px; width: 2px; background: var(--border); z-index: 1; }
+  .timeline-step:last-child::before { display: none; }
+  .timeline-step.active::before { background: var(--accent); }
+
+  .timer-badge { display: inline-block; background: rgba(255,87,34,0.1); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 8px; }
+</style>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div class="tracker-container">
+  <header style="padding: 20px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border);">
+    <h2 style="margin:0; font-size:18px; color:var(--accent); font-weight:900;">CruDrop Live Tracker</h2>
+  </header>
+
+  <div class="tracker-header">
+    <p style="margin:0; font-size:13px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:1px;">Show this code to the rider</p>
+    <div class="tracker-code" id="codeDisplay">----</div>
+    <p style="margin:0; font-size:13px; color:var(--text-muted);">Estimated delivery before 9:05 PM</p>
+  </div>
+
+  <div class="status-timeline">
+    <div class="timeline-step active">
+      <div class="step-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="step-content">
+        <h4>Order Placed</h4>
+        <p>We received your order.</p>
+        <div class="timer-badge" id="verifyTimer">Verifying payment...</div>
+      </div>
+    </div>
+    
+    <div class="timeline-step" id="step2">
+      <div class="step-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></div>
+      <div class="step-content">
+        <h4>Payment Verified</h4>
+        <p>We are buying your food.</p>
+      </div>
+    </div>
+    
+    <div class="timeline-step" id="step3">
+      <div class="step-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+      <div class="step-content">
+        <h4>On the Way</h4>
+        <p>Rider is heading to your hostel.</p>
+      </div>
+    </div>
+    
+    <div class="timeline-step" id="step4">
+      <div class="step-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div class="step-content">
+        <h4>Delivered</h4>
+        <p>Enjoy your meal!</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; padding:40px 20px;">
+    <a href="/" style="color:var(--accent); font-weight:700; text-decoration:none;">Back to Home</a>
+  </div>
+</div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  let code = urlParams.get('code');
+  if(!code || code === '----') code = localStorage.getItem('cruDropOrderCode') || '----';
+  document.getElementById('codeDisplay').textContent = code;
+
+  const timerBadge = document.getElementById('verifyTimer');
+  const step2 = document.getElementById('step2');
+
+  function checkOrderStatus() {
+    // Look up the order in the database
+    const orders = JSON.parse(localStorage.getItem('cruDropOrders') || '[]');
+    const myOrder = orders.find(o => o.code === code);
+
+    if(myOrder && myOrder.status === 'verified') {
+      // ADMIN APPROVED IT!
+      timerBadge.textContent = "Payment Verified ✓";
+      timerBadge.style.background = "rgba(34, 197, 94, 0.1)";
+      timerBadge.style.color = "#22C55E";
+      step2.classList.add('active');
+    } else {
+      // Still pending, show the countdown
+      let verifyEndTime = localStorage.getItem('cruDropVerifyEndTime');
+      if(verifyEndTime) {
+        const timeLeft = verifyEndTime - Date.now();
+        if (timeLeft > 0) {
+          const minutes = Math.floor(timeLeft / 60000);
+          const seconds = Math.floor((timeLeft % 60000) / 1000);
+          timerBadge.textContent = `Reviewing: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+          timerBadge.textContent = "Verifying manually...";
+        }
+      }
+    }
+  }
+
+  checkOrderStatus();
+  setInterval(checkOrderStatus, 3000); // Check every 3 seconds
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/sw.js')
+        .then(registration => console.log('SW registered'))
+        .catch(err => console.log('SW registration failed'));
+    });
+  }
+</script>
+</body>
+</html>

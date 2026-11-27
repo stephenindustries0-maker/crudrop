@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 15px; font-weight: 600; color: var(--text-main); }
+  .row.total { font-weight: 900; font-size: 20px; color: var(--accent); border-top: 1px dashed var(--border); margin-top: 12px; padding-top: 20px; }
+</style>
+</head>
+<body>
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-brand"><h1>Cru<span>Drop</span></h1><button class="close-btn mobile-only" onclick="toggleSidebar()">✕</button></div>
+  <div class="sidebar-menu">
+    <a href="/" class="active">Food Menu</a>
+  </div>
+</aside>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <a href="/" class="back-btn"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M15 18l-6-6 6-6"/></svg></a>
+        <h2 style="margin:0; font-size:18px;">Checkout</h2>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 600px; margin: 0 auto;">
+    <form id="checkoutForm" onsubmit="handleCheckout(event)">
+      <div class="form-group">
+        <label>Full Name (First & Last)</label>
+        <input type="text" id="checkoutName" class="form-control" placeholder="e.g. Stephen Idowu" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Phone Number (Used for your profile)</label>
+        <input type="tel" id="checkoutPhone" class="form-control" placeholder="e.g. 08123456789" required>
+      </div>
+
+      <div style="display:flex; gap:12px;">
+        <div class="form-group" style="flex:1;">
+          <label>Hostel</label>
+          <input type="text" id="checkoutHostel" class="form-control" placeholder="e.g. Peter Hall" required>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>Room No.</label>
+          <input type="text" id="checkoutRoom" class="form-control" placeholder="e.g. 12B" required>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-card); border:1px solid var(--border); padding:20px; border-radius:16px; margin-top:16px;">
+        <div class="row"><span>Food Subtotal</span><span id="checkoutSubtotal">₦0</span></div>
+        <div class="row"><span>Delivery Fee</span><span id="checkoutDelivery">₦0</span></div>
+        <div class="row"><span>Transfer Fee</span><span>₦30</span></div>
+        <div class="row total"><span>Total to Transfer</span><span id="checkoutTotal">₦0</span></div>
+      </div>
+
+      <button type="submit" id="payBtn" class="main-checkout-btn" style="margin-top:20px;">Proceed to Payment</button>
+    </form>
+  </main>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedTotals = JSON.parse(localStorage.getItem('cruDropTotals_v2') || '{}');
+    if(document.getElementById('checkoutSubtotal')) document.getElementById('checkoutSubtotal').textContent = '₦' + (savedTotals.foodSubtotal || 0);
+    if(document.getElementById('checkoutDelivery')) document.getElementById('checkoutDelivery').textContent = '₦' + (savedTotals.deliveryFee || 0);
+    if(document.getElementById('checkoutTotal')) document.getElementById('checkoutTotal').textContent = '₦' + (savedTotals.grandTotal || 30);
+
+    // Pre-fill if they have ordered before
+    const savedUser = JSON.parse(localStorage.getItem('cruDropUser') || '{}');
+    if(savedUser.name) document.getElementById('checkoutName').value = savedUser.name;
+    if(savedUser.phone) document.getElementById('checkoutPhone').value = savedUser.phone;
+    if(savedUser.hostel) document.getElementById('checkoutHostel').value = savedUser.hostel;
+    if(savedUser.room) document.getElementById('checkoutRoom').value = savedUser.room;
+  });
+
+  async function handleCheckout(e) {
+    e.preventDefault();
+    const btn = document.getElementById('payBtn');
+    btn.textContent = "Processing...";
+
+    const user = {
+      name: document.getElementById('checkoutName').value,
+      phone: document.getElementById('checkoutPhone').value,
+      hostel: document.getElementById('checkoutHostel').value,
+      room: document.getElementById('checkoutRoom').value
+    };
+
+    try {
+      // Silently create/match the user in the database
+      const res = await fetch('/api/auto-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      });
+      
+      const data = await res.json();
+      
+      if(data.success) {
+        // Save the real user object (with ID) to local storage
+        localStorage.setItem('cruDropUser', JSON.stringify(data.user));
+        window.location.href = '/payment.html';
+      } else {
+        alert("Error: " + data.error);
+        btn.textContent = "Proceed to Payment";
+      }
+    } catch (err) {
+      alert("Network error. Please try again.");
+      btn.textContent = "Proceed to Payment";
+    }
+  }
+</script>
+</body>
+</html>

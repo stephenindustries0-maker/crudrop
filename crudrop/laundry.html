@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laundry - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .laundry-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 20px; display: flex; flex-direction: column; }
+  .laundry-img { width: 100%; height: 180px; object-fit: cover; }
+  .laundry-content { padding: 20px; }
+  .laundry-content h3 { margin: 0 0 4px; font-size: 18px; font-weight: 800; }
+  .laundry-content p { margin: 0 0 16px; font-size: 14px; color: var(--text-muted); }
+  .counter { display: flex; align-items: center; gap: 16px; background: var(--bg-main); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--border); }
+  .counter button { background: var(--accent); color: white; border: none; width: 32px; height: 32px; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .counter span { font-size: 18px; font-weight: 800; min-width: 20px; text-align: center; }
+  .how-it-works { display: flex; justify-content: space-between; margin-bottom: 30px; text-align: center; }
+  .step { flex: 1; }
+  .step-icon { width: 50px; height: 50px; background: var(--accent-light); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+  .step h4 { margin: 0 0 4px; font-size: 13px; font-weight: 700; }
+  .step p { margin: 0; font-size: 11px; color: var(--text-muted); }
+</style>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-brand"><h1>Cru<span>Drop</span></h1><button class="close-btn mobile-only" onclick="toggleSidebar()">✕</button></div>
+  <div class="sidebar-profile"><div class="avatar">S</div><div><h3>Stephen</h3><p>Crawford University</p></div></div>
+  <div class="sidebar-menu">
+    <a href="/"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Food Menu</a>
+    <a href="/laundry.html" class="active"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Laundry (Sat)</a>
+    <a href="/leaderboard.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Leaderboard</a>
+    <a href="/wallet.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Wallet</a>
+    <a href="/notifications.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications</a>
+    <a href="/support.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Support</a>
+    <a href="/profile.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a>
+  </div>
+</aside>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <button class="menu-toggle mobile-only" onclick="toggleSidebar()">☰</button>
+        <h2 style="margin:0; font-size:18px;">Laundry Service</h2>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 600px; margin: 0 auto;">
+    
+    <div class="promo-banner" style="background:linear-gradient(135deg, var(--bg-card) 0%, #2a3a5a 100%); margin-bottom:30px;">
+      <div class="promo-content"><div><h2 style="color:var(--accent);">Campus Washing</h2><p>Pickup & return every Friday & Saturday.</p></div></div>
+    </div>
+
+    <!-- How it works -->
+    <h3 style="margin:0 0 16px; font-size:16px;">How it works</h3>
+    <div class="how-it-works">
+      <div class="step">
+        <div class="step-icon"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <h4>1. Book</h4><p>Select items</p>
+      </div>
+      <div class="step">
+        <div class="step-icon"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+        <h4>2. Pickup</h4><p>We grab it</p>
+      </div>
+      <div class="step">
+        <div class="step-icon"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h4>3. Wash</h4><p>Fresh & clean</p>
+      </div>
+      <div class="step">
+        <div class="step-icon"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+        <h4>4. Return</h4><p>Back to you</p>
+      </div>
+    </div>
+
+    <!-- Tops -->
+    <div class="laundry-card">
+      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop" class="laundry-img" alt="Tops">
+      <div class="laundry-content">
+        <h3>Tops</h3>
+        <p>Shirts, T-shirts, Polos, Singlets</p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:18px; font-weight:800; color:var(--accent);">₦200 / item</span>
+          <div class="counter">
+            <button onclick="updateLaundry('tops', -1)">−</button>
+            <span id="topsQty">0</span>
+            <button onclick="updateLaundry('tops', 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottoms -->
+    <div class="laundry-card">
+      <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800&auto=format&fit=crop" class="laundry-img" alt="Bottoms">
+      <div class="laundry-content">
+        <h3>Bottoms</h3>
+        <p>Jeans, Chinos, Trousers, Shorts</p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:18px; font-weight:800; color:var(--accent);">₦300 / item</span>
+          <div class="counter">
+            <button onclick="updateLaundry('bottoms', -1)">−</button>
+            <span id="bottomsQty">0</span>
+            <button onclick="updateLaundry('bottoms', 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:20px; margin-top:30px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <p style="margin:0 0 4px; font-size:13px; color:var(--text-muted); font-weight:600;">Total Wash Cost</p>
+        <h2 style="margin:0; font-size:24px; font-weight:900; color:var(--accent);" id="laundryTotal">₦0</h2>
+      </div>
+      <button class="main-checkout-btn" style="width:auto; padding:14px 24px; margin:0;" onclick="bookLaundry()">Book Wash</button>
+    </div>
+
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+  let laundryCart = { tops: 0, bottoms: 0 };
+
+  function updateLaundry(type, change) {
+    if (laundryCart[type] + change >= 0) {
+      laundryCart[type] += change;
+      document.getElementById(type + 'Qty').textContent = laundryCart[type];
+      calculateLaundryTotal();
+    }
+  }
+
+  function calculateLaundryTotal() {
+    const total = (laundryCart.tops * 200) + (laundryCart.bottoms * 300);
+    document.getElementById('laundryTotal').textContent = '₦' + total;
+  }
+
+  async function bookLaundry() {
+    if (laundryCart.tops === 0 && laundryCart.bottoms === 0) {
+      alert("Please select at least one item to wash.");
+      return;
+    }
+    
+    const user = JSON.parse(localStorage.getItem('cruDropUser') || '{}');
+    if(!user.id) return window.location.href = '/checkout.html';
+
+    const total = (laundryCart.tops * 200) + (laundryCart.bottoms * 300);
+    const code = Math.floor(1000 + Math.random() * 9000).toString();
+
+    try {
+      const res = await fetch('/api/create-laundry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          code: code, 
+          studentId: user.id, 
+          tops: laundryCart.tops, 
+          bottoms: laundryCart.bottoms, 
+          total: total 
+        })
+      });
+
+      if(res.ok) {
+        alert(`Laundry booked successfully! Code: ${code}. Please pay ₦${total} to Opay 7084316433.`);
+        window.location.href = '/';
+      }
+    } catch (err) {
+      alert("Network error.");
+    }
+  }
+</script>
+<script>
+  let laundryCart = { tops: 0, bottoms: 0 };
+
+  function updateLaundry(type, change) {
+    if (laundryCart[type] + change >= 0) {
+      laundryCart[type] += change;
+      document.getElementById(type + 'Qty').textContent = laundryCart[type];
+      calculateLaundryTotal();
+    }
+  }
+
+  function calculateLaundryTotal() {
+    const total = (laundryCart.tops * 200) + (laundryCart.bottoms * 300);
+    document.getElementById('laundryTotal').textContent = '₦' + total;
+  }
+
+  async function bookLaundry() {
+    if (laundryCart.tops === 0 && laundryCart.bottoms === 0) {
+      alert("Please select at least one item to wash.");
+      return;
+    }
+    
+    const user = JSON.parse(localStorage.getItem('cruDropUser') || '{}');
+    if(!user.id) return window.location.href = '/checkout.html';
+
+    const total = (laundryCart.tops * 200) + (laundryCart.bottoms * 300);
+    const code = Math.floor(1000 + Math.random() * 9000).toString();
+
+    try {
+      const res = await fetch('/api/create-laundry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          code: code, 
+          studentId: user.id, 
+          tops: laundryCart.tops, 
+          bottoms: laundryCart.bottoms, 
+          total: total 
+        })
+      });
+
+      if(res.ok) {
+        alert(`Laundry booked successfully! Code: ${code}. Please pay ₦${total} to Opay 7084316433.`);
+        window.location.href = '/';
+      }
+    } catch (err) {
+      alert("Network error.");
+    }
+  }
+</script>
+</body>
+</html>

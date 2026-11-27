@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Top Up Wallet - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .amount-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .amount-btn { background: var(--bg-card); border: 1px solid var(--border); padding: 16px; border-radius: 12px; text-align: center; font-weight: 800; font-size: 16px; color: var(--text-main); cursor: pointer; transition: 0.2s; }
+  .amount-btn:hover, .amount-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+  .bank-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 24px; position: relative; }
+  .copy-btn { position: absolute; top: 20px; right: 20px; background: var(--accent-light); color: var(--accent); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+  .copy-btn:active { transform: scale(0.95); }
+  
+  /* In-app Toast Notification */
+  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--accent); color: white; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 15px rgba(255,87,34,0.4); z-index: 9999; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 8px; }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  
+  .upload-box { border: 2px dashed var(--border); border-radius: 16px; padding: 24px; text-align: center; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); margin-bottom: 20px; }
+  .upload-box:hover { border-color: var(--accent); background: var(--accent-light); }
+</style>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div id="toast">
+  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="3" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+  Account number copied!
+</div>
+
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-brand"><h1>Cru<span>Drop</span></h1><button class="close-btn mobile-only" onclick="toggleSidebar()">✕</button></div>
+  <div class="sidebar-profile"><div class="avatar" id="navAvatar">S</div><div><h3 id="navName">Student</h3><p id="navHostel">Crawford</p></div></div>
+  <div class="sidebar-menu">
+    <a href="/"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Food Menu</a>
+    <a href="/laundry.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Laundry (Sat)</a>
+    <a href="/leaderboard.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Leaderboard</a>
+    <a href="/wallet.html" class="active"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Wallet</a>
+    <a href="/notifications.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications</a>
+    <a href="/support.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Support</a>
+    <a href="/profile.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a>
+  </div>
+</aside>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <a href="/wallet.html" class="back-btn"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M15 18l-6-6 6-6"/></svg></a>
+        <h2 style="margin:0; font-size:18px;">Top Up Wallet</h2>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 600px; margin: 0 auto;">
+    
+    <h3 style="margin:0 0 16px; font-size:16px;">1. Enter Amount</h3>
+    <div class="amount-grid">
+      <div class="amount-btn" onclick="selectAmount(1000, this)">₦1,000</div>
+      <div class="amount-btn" onclick="selectAmount(2000, this)">₦2,000</div>
+      <div class="amount-btn" onclick="selectAmount(5000, this)">₦5,000</div>
+      <div class="amount-btn" onclick="selectAmount(10000, this)">₦10,000</div>
+    </div>
+
+    <div class="auth-input-group">
+      <input type="number" id="topupAmount" placeholder="Or enter custom amount" oninput="handleCustomAmount()" style="font-size:20px; font-weight:800; text-align:center; padding:16px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; color:var(--text-main); width:100%; outline:none;">
+    </div>
+
+    <h3 style="margin:24px 0 16px; font-size:16px;">2. Transfer To</h3>
+    <div class="bank-card">
+      <button class="copy-btn" onclick="copyAccount()">Copy</button>
+      <p style="margin:0 0 8px; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Opay</p>
+      <h2 style="margin:0 0 4px; font-size:24px; font-weight:900; color:var(--accent); letter-spacing:1px;">7084316433</h2>
+      <p style="margin:0; font-size:14px; font-weight:600;">IDOWU STEPHEN TOMIWA</p>
+    </div>
+
+    <h3 style="margin:24px 0 16px; font-size:16px;">3. Upload Receipt</h3>
+    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+      <svg viewBox="0 0 24 24" width="32" height="32" stroke="var(--accent)" stroke-width="2" fill="none" style="margin-bottom:12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p style="margin:0; font-weight:700; font-size:15px; color:var(--accent);" id="fileName">Tap to upload receipt</p>
+      <p style="margin:4px 0 0; font-size:12px; color:var(--text-muted);">JPG, PNG or PDF</p>
+    </div>
+    <input type="file" id="fileInput" style="display:none;" accept="image/*" onchange="document.getElementById('fileName').textContent = this.files[0].name">
+
+    <button class="main-checkout-btn" onclick="submitTopup()">I Have Transferred</button>
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+  let selectedAmount = 0;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedUser = localStorage.getItem('cruDropUser');
+    if(savedUser) {
+      const user = JSON.parse(savedUser);
+      if(document.getElementById('navName')) document.getElementById('navName').textContent = user.name;
+      if(document.getElementById('navHostel')) document.getElementById('navHostel').textContent = user.hostel;
+      if(document.getElementById('navAvatar')) document.getElementById('navAvatar').textContent = user.name.charAt(0).toUpperCase();
+    }
+  });
+
+  function selectAmount(amount, element) {
+    selectedAmount = amount;
+    document.getElementById('topupAmount').value = amount;
+    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+    element.classList.add('active');
+  }
+
+  function handleCustomAmount() {
+    selectedAmount = parseInt(document.getElementById('topupAmount').value) || 0;
+    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+  }
+
+  function copyAccount() {
+    navigator.clipboard.writeText("7084316433");
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 3000);
+  }
+
+  function submitTopup() {
+    const file = document.getElementById('fileInput').files[0];
+    
+    if(selectedAmount <= 0) {
+      alert("Please enter a valid amount to top up.");
+      return;
+    }
+    
+    if(!file) {
+      alert("Please upload a screenshot of your receipt.");
+      return;
+    }
+
+    localStorage.setItem('cruDropTopupAmount', selectedAmount);
+    window.location.href = '/waiting.html?type=topup';
+  }
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/sw.js')
+        .then(registration => console.log('SW registered'))
+        .catch(err => console.log('SW registration failed'));
+    });
+  }
+</script>
+</body>
+</html>

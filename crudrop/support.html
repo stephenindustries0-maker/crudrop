@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Support - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-brand"><h1>Cru<span>Drop</span></h1><button class="close-btn mobile-only" onclick="toggleSidebar()">✕</button></div>
+  <div class="sidebar-profile"><div class="avatar">S</div><div><h3>Stephen</h3><p>Crawford University</p></div></div>
+  <div class="sidebar-menu">
+    <a href="/" class=""><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Food Menu</a>
+    <a href="/laundry.html" class=""><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Laundry (Sat)</a>
+    <a href="/leaderboard.html" class=""><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Leaderboard</a>
+    <a href="/wallet.html" class=""><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Wallet</a>
+    <a href="/notifications.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications</a>
+    <a href="/support.html" class=""><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Support</a>
+    <a href="/profile.html" class=""><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a>
+  </div>
+  <div class="sidebar-footer"><p>A Stephen Industries Platform</p></div>
+</aside>
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <a href="/" class="back-btn mobile-only"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M15 18l-6-6 6-6"/></svg></a>
+      </div>
+    </div>
+  </header>
+  <main><div class="product-card" style="padding:24px; text-align:center; margin-bottom:16px;">
+  <h3 style="margin:0 0 8px; font-size:18px;">Need help with your order?</h3>
+  <p style="margin:0 0 20px; color:var(--text-muted); font-size:14px;">Our team is available during delivery hours.</p>
+  <a href="https://wa.me/2347084316433" target="_blank" style="display:block; background:var(--accent); color:white; text-decoration:none; padding:14px; border-radius:12px; font-weight:700;">Chat on WhatsApp</a>
+</div>
+<h3 style="margin:24px 0 16px;">Frequently Asked Questions</h3>
+<div style="border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:16px;">
+  <h4 style="margin:0 0 8px; font-size:15px;">How does the 5-minute verification work?</h4>
+  <p style="margin:0; font-size:14px; color:var(--text-muted); line-height:1.5;">Once you submit your transfer reference, we verify it within 5 minutes. If it takes longer, you get 10% off your delivery fee automatically.</p>
+</div>
+<div style="border-bottom:1px solid var(--border); padding-bottom:16px;">
+  <h4 style="margin:0 0 8px; font-size:15px;">What if the vendor is out of an item?</h4>
+  <p style="margin:0; font-size:14px; color:var(--text-muted); line-height:1.5;">We will call you immediately to offer a replacement or refund the exact amount instantly.</p>
+</div></main>
+</div>
+<script src="/js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/sw.js')
+        .then(registration => console.log('SW registered'))
+        .catch(err => console.log('SW registration failed'));
+    });
+  }
+</script>
+</body>
+</html>

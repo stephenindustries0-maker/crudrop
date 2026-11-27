@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leaderboard - CruDrop</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  body { display: block !important; background: var(--bg-main); margin: 0; }
+  .lb-tabs { display: flex; background: var(--bg-card); border-radius: 12px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .lb-tab { flex: 1; padding: 12px; text-align: center; font-weight: 700; font-size: 14px; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: 0.2s; }
+  .lb-tab.active { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
+  
+  .lb-section { display: none; animation: fadeIn 0.3s ease; }
+  .lb-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .my-rank-card { background: linear-gradient(135deg, rgba(255,87,34,0.15) 0%, rgba(255,87,34,0.05) 100%); border: 1px solid var(--accent); border-radius: 20px; padding: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(255,87,34,0.1); }
+  .my-rank-info h4 { margin: 0 0 4px; font-size: 13px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .my-rank-info h2 { margin: 0; font-size: 28px; font-weight: 900; color: var(--text-main); }
+  .my-rank-info p { margin: 4px 0 0; font-size: 13px; color: var(--text-muted); }
+  .my-rank-badge { background: var(--accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(255,87,34,0.4); }
+  .my-rank-badge span { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .my-rank-badge strong { font-size: 18px; font-weight: 900; line-height: 1; display: flex; align-items: center; gap: 4px;}
+
+  .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 8px; margin-bottom: 30px; height: 200px; }
+  .podium-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; text-align: center; width: 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
+  .podium-card.rank-1 { height: 170px; border-color: #FFD700; background: linear-gradient(180deg, var(--bg-card) 0%, rgba(255,215,0,0.1) 100%); }
+  .podium-card.rank-2 { height: 140px; border-color: #C0C0C0; background: linear-gradient(180deg, var(--bg-card) 0%, rgba(192,192,192,0.1) 100%); }
+  .podium-card.rank-3 { height: 120px; border-color: #CD7F32; background: linear-gradient(180deg, var(--bg-card) 0%, rgba(205,127,50,0.1) 100%); }
+  .podium-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--bg-main); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 8px; margin-top: -36px; }
+  .rank-1 .podium-avatar { border-color: #FFD700; background: #FFD700; color: black; }
+  .rank-2 .podium-avatar { border-color: #C0C0C0; background: #C0C0C0; color: black; }
+  .rank-3 .podium-avatar { border-color: #CD7F32; background: #CD7F32; color: white; }
+  .podium-card h4 { margin: 0 0 4px; font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+  .podium-card p { margin: 0; font-size: 11px; color: var(--text-muted); }
+  .podium-points { font-size: 14px; font-weight: 900; color: var(--accent); margin-top: auto; }
+
+  .lb-list-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg-card); border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--border); }
+  .lb-list-left { display: flex; align-items: center; gap: 16px; }
+  .lb-rank-num { font-size: 18px; font-weight: 900; color: var(--text-muted); width: 24px; text-align: center; }
+  .lb-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--text-main); }
+  .lb-details h4 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
+  .lb-details p { margin: 0; font-size: 12px; color: var(--text-muted); }
+  .lb-score { font-size: 16px; font-weight: 800; color: var(--accent); }
+
+  .streak-container { background: var(--bg-card); border-radius: 20px; padding: 24px; border: 1px solid var(--border); text-align: center; margin-bottom: 24px; }
+  .streak-icon-main { width: 64px; height: 64px; margin: 0 auto 16px; color: var(--accent); }
+  .streak-days { font-size: 32px; font-weight: 900; color: var(--text-main); margin-bottom: 4px; }
+  .streak-bar { display: flex; gap: 8px; margin-top: 24px; justify-content: center; }
+  .streak-day { flex: 1; height: 8px; border-radius: 4px; background: var(--bg-main); }
+  .streak-day.active { background: var(--accent); }
+  .streak-rewards { display: flex; justify-content: space-between; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px; }
+  .reward-item { text-align: center; opacity: 0.5; }
+  .reward-item.active { opacity: 1; }
+  .reward-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-main); display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; color: var(--text-main); }
+  .reward-item.active .reward-icon { background: rgba(255,87,34,0.2); border: 1px solid var(--accent); color: var(--accent); }
+  .reward-item p { margin: 0; font-size: 11px; font-weight: 700; }
+
+  .hostel-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg-card); border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+  .hostel-bar-container { flex: 1; height: 6px; background: var(--bg-main); border-radius: 3px; margin: 0 20px; overflow: hidden; }
+  .hostel-bar { height: 100%; background: var(--accent); border-radius: 3px; }
+</style>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#FF5722"></head>
+<body>
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-brand"><h1>Cru<span>Drop</span></h1><button class="close-btn mobile-only" onclick="toggleSidebar()">✕</button></div>
+  <div class="sidebar-profile"><div class="avatar" id="navAvatar">S</div><div><h3 id="navName">Student</h3><p id="navHostel">Crawford</p></div></div>
+  <div class="sidebar-menu">
+    <a href="/"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Food Menu</a>
+    <a href="/laundry.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Laundry (Sat)</a>
+    <a href="/leaderboard.html" class="active"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Leaderboard</a>
+    <a href="/wallet.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Wallet</a>
+    <a href="/notifications.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications</a>
+    <a href="/support.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Support</a>
+    <a href="/profile.html"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a>
+  </div>
+</aside>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="header-left">
+        <button class="menu-toggle mobile-only" onclick="toggleSidebar()">☰</button>
+        <h2 style="margin:0; font-size:18px;">Campus Leaderboard</h2>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 600px; margin: 0 auto;">
+    
+    <div class="my-rank-card">
+      <div class="my-rank-info">
+        <h4>Your Rank</h4>
+        <h2 id="myRank">#124 <span style="font-size:14px; color:var(--text-muted); font-weight:600;">out of 124</span></h2>
+        <p id="myPoints">0 Points. Order to climb!</p>
+      </div>
+      <div class="my-rank-badge">
+        <span>Streak</span>
+        <strong id="myStreak">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" style="margin-right:2px;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          0
+        </strong>
+      </div>
+    </div>
+
+    <div class="lb-tabs">
+      <div class="lb-tab active" onclick="switchLbTab('students', this)">Top Students</div>
+      <div class="lb-tab" onclick="switchLbTab('hostels', this)">Hostel Wars</div>
+      <div class="lb-tab" onclick="switchLbTab('streaks', this)">My Streak</div>
+    </div>
+
+    <div id="tab-students" class="lb-section active">
+      <div class="podium-container">
+        <div class="podium-card rank-2">
+          <div class="podium-avatar">A</div>
+          <h4>Amaka E.</h4>
+          <p>Mary Hall</p>
+          <div class="podium-points">340 pts</div>
+        </div>
+        <div class="podium-card rank-1">
+          <div class="podium-avatar">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+          </div>
+          <h4>Chidi O.</h4>
+          <p>Peter Hall</p>
+          <div class="podium-points">420 pts</div>
+        </div>
+        <div class="podium-card rank-3">
+          <div class="podium-avatar">T</div>
+          <h4>Tunde B.</h4>
+          <p>Paul Hall</p>
+          <div class="podium-points">310 pts</div>
+        </div>
+      </div>
+
+      <!-- Dynamic list: Only shows YOU at your actual rank -->
+      <div class="lb-list-item" style="border:2px solid var(--accent); background:rgba(255,87,34,0.05);">
+        <div class="lb-list-left">
+          <div class="lb-rank-num" style="color:var(--accent);" id="listRank">124</div>
+          <div class="lb-avatar" style="background:var(--accent); color:white;" id="listAvatar">Y</div>
+          <div class="lb-details"><h4 style="color:var(--accent);" id="listName">You</h4><p id="listHostel">Crawford</p></div>
+        </div>
+        <div class="lb-score" id="listPoints">0 pts</div>
+      </div>
+      
+      <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-top:20px;">Place your first order to appear on the leaderboard.</p>
+    </div>
+
+    <div id="tab-hostels" class="lb-section">
+      <h3 style="margin:0 0 16px; font-size:16px;">Weekly Hostel Battle</h3>
+      <p style="margin:0 0 20px; font-size:13px; color:var(--text-muted);">Winning hostel gets a free drink drop on Friday.</p>
+      
+      <div class="hostel-item">
+        <div style="display:flex; align-items:center; gap:12px; width:80px;"><div style="font-weight:900; color:#FFD700; font-size:20px;">1</div><h4 style="margin:0; font-size:15px;">Peter</h4></div>
+        <div class="hostel-bar-container"><div class="hostel-bar" style="width: 100%;"></div></div>
+        <div style="font-weight:800; font-size:14px;">142</div>
+      </div>
+      <div class="hostel-item">
+        <div style="display:flex; align-items:center; gap:12px; width:80px;"><div style="font-weight:900; color:#C0C0C0; font-size:20px;">2</div><h4 style="margin:0; font-size:15px;">Mary</h4></div>
+        <div class="hostel-bar-container"><div class="hostel-bar" style="width: 85%;"></div></div>
+        <div style="font-weight:800; font-size:14px;">120</div>
+      </div>
+      <div class="hostel-item">
+        <div style="display:flex; align-items:center; gap:12px; width:80px;"><div style="font-weight:900; color:#CD7F32; font-size:20px;">3</div><h4 style="margin:0; font-size:15px;">Paul</h4></div>
+        <div class="hostel-bar-container"><div class="hostel-bar" style="width: 60%;"></div></div>
+        <div style="font-weight:800; font-size:14px;">85</div>
+      </div>
+    </div>
+
+    <div id="tab-streaks" class="lb-section">
+      <div class="streak-container">
+        <svg class="streak-icon-main" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+        <div class="streak-days" id="streakDaysText">0 Days</div>
+        <p style="margin:0; font-size:14px; color:var(--text-muted);">Place an order today to start your streak.</p>
+        
+        <div class="streak-bar">
+          <div class="streak-day"></div>
+          <div class="streak-day"></div>
+          <div class="streak-day"></div>
+          <div class="streak-day"></div>
+          <div class="streak-day"></div>
+          <div class="streak-day"></div>
+          <div class="streak-day"></div>
+        </div>
+        
+        <div class="streak-rewards">
+          <div class="reward-item">
+            <div class="reward-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+            <p>3 Days<br>Free Water</p>
+          </div>
+          <div class="reward-item" style="margin-top:10px;">
+            <div class="reward-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></div>
+            <p>7 Days<br>₦100 Off</p>
+          </div>
+          <div class="reward-item" style="margin-top:20px;">
+            <div class="reward-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg></div>
+            <p>14 Days<br>VIP Badge</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedUser = localStorage.getItem('cruDropUser');
+    if(savedUser) {
+      const user = JSON.parse(savedUser);
+      
+      // Update Sidebar
+      if(document.getElementById('navName')) document.getElementById('navName').textContent = user.name;
+      if(document.getElementById('navHostel')) document.getElementById('navHostel').textContent = user.hostel;
+      if(document.getElementById('navAvatar')) document.getElementById('navAvatar').textContent = user.name.charAt(0).toUpperCase();
+      
+      // Update Leaderboard Data
+      if(document.getElementById('listName')) document.getElementById('listName').textContent = user.name + " (You)";
+      if(document.getElementById('listHostel')) document.getElementById('listHostel').textContent = user.hostel;
+      if(document.getElementById('listAvatar')) document.getElementById('listAvatar').textContent = user.name.charAt(0).toUpperCase();
+      
+      const points = user.points || 0;
+      const orders = user.orders || 0;
+      
+      if(document.getElementById('listPoints')) document.getElementById('listPoints').textContent = points + " pts";
+      if(document.getElementById('myPoints')) document.getElementById('myPoints').textContent = points + " Points. " + (points < 310 ? "Order to climb!" : "You are in the Top 3!");
+      if(document.getElementById('myRank')) document.getElementById('myRank').textContent = "#" + (124 - orders);
+    }
+  });
+
+  function switchLbTab(tabName, element) {
+    document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.lb-section').forEach(s => s.classList.remove('active'));
+    element.classList.add('active');
+    document.getElementById('tab-' + tabName).classList.add('active');
+  }
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/sw.js')
+        .then(registration => console.log('SW registered'))
+        .catch(err => console.log('SW registration failed'));
+    });
+  }
+</script>
+</body>
+</html>
